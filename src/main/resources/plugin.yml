@@ -4,3 +4,7 @@ main: me.miguelcr.mcquirk.MCQuirk
 api-version: 1.18
 authors: [ MiguelX413 ]
 description: Allows players to apply regex to their own messages
+commands:
+  addregex:
+    description: Add a regex to be applied to your messages
+    usage: /addregex <regex>
