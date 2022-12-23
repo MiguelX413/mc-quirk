@@ -1,0 +1,6 @@
+name: MCQuirk
+version: '${version}'
+main: me.miguelcr.mcquirk.MCQuirk
+api-version: 1.18
+authors: [ MiguelX413 ]
+description: Allows players to apply regex to their own messages
