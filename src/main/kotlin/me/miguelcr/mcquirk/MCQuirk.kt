@@ -8,7 +8,8 @@ class MCQuirk : JavaPlugin() {
         // Plugin startup logic
         config.options().copyDefaults()
         saveDefaultConfig()
-        getCommand("addregex")?.setExecutor(AddRegex(this))
+        val regexData = RegexData(this);
+        getCommand("addregex")?.setExecutor(AddRegex(regexData))
     }
 
     override fun onDisable() {
