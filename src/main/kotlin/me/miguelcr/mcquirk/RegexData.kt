@@ -3,12 +3,19 @@ package me.miguelcr.mcquirk
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 class RegexData(private val plugin: JavaPlugin) {
-    private var data: Map<String, Pair<Regex, String>> = emptyMap()
+    private var data: MutableMap<String, MutableList<Pair<Regex, String>>> = mutableMapOf()
 
-    private fun getUsersSection(): ConfigurationSection {
+    private fun getFromData(str: String): MutableList<Pair<Regex, String>> {
+        return data.getOrPut(str) {
+            val userConfigSection = getOrPutUserConfigSection(str)
+            userConfigSection.getMapList()
+            mutableListOf()
+        }
+    }
+
+    private fun getOrPutUsersConfigSection(): ConfigurationSection {
         return plugin.config.getConfigurationSection("users") ?: run {
             plugin.config.createSection("users")
             plugin.saveConfig()
@@ -16,8 +23,8 @@ class RegexData(private val plugin: JavaPlugin) {
         }
     }
 
-    private fun getUserSection(name: String): ConfigurationSection {
-        val usersSection = getUsersSection()
+    private fun getOrPutUserConfigSection(name: String): ConfigurationSection {
+        val usersSection = getOrPutUsersConfigSection()
         return usersSection.getConfigurationSection(name) ?: run {
             usersSection.createSection(name)
             plugin.saveConfig()
@@ -25,9 +32,19 @@ class RegexData(private val plugin: JavaPlugin) {
         }
     }
 
+    private fun getUser(name: String): List<Pair<String, String>> {
+        val userConfigSection = getOrPutUserConfigSection(name)
+        return userConfigSection.getKeys(false).map {
+            Pair(it!!, userConfigSection.getString(it)!!)
+        }
+    }
+
     fun addUserRegex(player: Player, str: String) {
         val id = player.uniqueId.toString()
-        val userSection = getUserSection(id)
+
+
+
+        val userSection = getOrPutUserConfigSection(id)
         val user = userSection.getStringList(id)
         if (!user.contains(str)) {
             user.add(str)
